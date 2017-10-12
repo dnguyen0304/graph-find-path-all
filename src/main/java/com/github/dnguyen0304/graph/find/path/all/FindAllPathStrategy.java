@@ -45,6 +45,11 @@ public class FindAllPathStrategy {
                 paths.add(currentPath);
             }
 
+            // The runtime complexity of clear() is O(n) because it sets
+            // every element to null. The runtime complexity of removeAll()
+            // is O(n^2) because there is a nested call to contains(), which
+            // has a runtime complexity of O(n). Both of these methods
+            // garbage collect the elements themselves.
             currentPath = new ArrayList<Integer>();
         }
 
