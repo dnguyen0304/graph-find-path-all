@@ -55,4 +55,29 @@ public class FindAllPathStrategyTest {
         assertEquals(expectedPaths, paths);
     }
 
+    @Test
+    public void testFindPathsLoop() {
+        List<List<Integer>> adjacencyMatrix = new ArrayList<>();
+        List<List<Integer>> expectedPaths = new ArrayList<>();
+
+        //   A B
+        // A 1 0
+        // B 0 0
+
+        List<Integer> aRow = new ArrayList<Integer>();
+        aRow.add(1);
+        aRow.add(0);
+        List<Integer> bRow = new ArrayList<Integer>();
+        bRow.add(0);
+        bRow.add(0);
+
+        adjacencyMatrix.add(aRow);
+        adjacencyMatrix.add(bRow);
+
+        expectedPaths.add(Arrays.asList(0, 0));
+
+        List<List<Integer>> paths = this.strategy.findPaths(adjacencyMatrix);
+        assertEquals(expectedPaths, paths);
+    }
+
 }

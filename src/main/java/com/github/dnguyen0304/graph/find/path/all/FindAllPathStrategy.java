@@ -14,6 +14,7 @@ public class FindAllPathStrategy {
                                           List<Integer> currentPath) {
         List<List<Integer>> paths = new ArrayList<>();
 
+        // Handle null and zero-valued inputs.
         if (adjacencyMatrix == null || adjacencyMatrix.isEmpty()) {
             return paths;
         }
@@ -21,6 +22,13 @@ public class FindAllPathStrategy {
         for (int row = 0; row < adjacencyMatrix.size(); row++) {
             currentPath.add(fromNode);
             Boolean hasAdjacent = false;
+
+            // Handle loops.
+            if (currentPath.size() >= 2 &&
+                currentPath.get(currentPath.size() - 2) == currentPath.get(currentPath.size() - 1)) {
+                    paths.add(currentPath);
+                    return paths;
+            }
 
             List<Integer> children = adjacencyMatrix.get(row);
             for (int toNode = 0; toNode < children.size(); toNode++) {
@@ -37,12 +45,10 @@ public class FindAllPathStrategy {
                 paths.add(currentPath);
             }
 
-            // clear
             currentPath = new ArrayList<Integer>();
         }
 
         return paths;
-
     }
 
 }
