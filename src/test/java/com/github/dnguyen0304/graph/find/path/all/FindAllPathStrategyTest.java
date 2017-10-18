@@ -112,6 +112,39 @@ public class FindAllPathStrategyTest {
     }
 
     @Test
+    public void testFromOneNodeNoCyclicPaths() {
+        //   A B C
+        // A 0 1 1
+        // B 0 0 1
+        // C 1 0 0
+        List<Integer> aRow = new ArrayList<Integer>();
+        aRow.add(0);
+        aRow.add(1);
+        aRow.add(1);
+        List<Integer> bRow = new ArrayList<Integer>();
+        bRow.add(0);
+        bRow.add(0);
+        bRow.add(1);
+        List<Integer> cRow = new ArrayList<Integer>();
+        cRow.add(1);
+        cRow.add(0);
+        cRow.add(0);
+        this.adjacencyMatrix.add(aRow);
+        this.adjacencyMatrix.add(bRow);
+        this.adjacencyMatrix.add(cRow);
+
+        this.expectedPaths.add(Arrays.asList(0, 1));
+        this.expectedPaths.add(Arrays.asList(0, 1, 2));
+        this.expectedPaths.add(Arrays.asList(0, 1, 2, 0));
+        this.expectedPaths.add(Arrays.asList(0, 2));
+        this.expectedPaths.add(Arrays.asList(0, 2, 0));
+        Set<List<Integer>> paths = this.strategy.fromOneNode(
+            this.adjacencyMatrix,
+            0);
+        assertEquals(expectedPaths, paths);
+    }
+
+    @Test
     public void testFromOneNodeNoLoopingPaths() {
         //   A B
         // A 0 1
@@ -249,6 +282,46 @@ public class FindAllPathStrategyTest {
         this.expectedPaths.add(Arrays.asList(1, 4));
         this.expectedPaths.add(Arrays.asList(2, 5));
 
+        Set<List<Integer>> paths = this.strategy.fromAllNodes(
+            this.adjacencyMatrix);
+        assertEquals(expectedPaths, paths);
+    }
+
+
+    @Test
+    public void testFromAllNodesNoCyclicPaths() {
+        //   A B C
+        // A 0 1 1
+        // B 0 0 1
+        // C 1 0 0
+        List<Integer> aRow = new ArrayList<Integer>();
+        aRow.add(0);
+        aRow.add(1);
+        aRow.add(1);
+        List<Integer> bRow = new ArrayList<Integer>();
+        bRow.add(0);
+        bRow.add(0);
+        bRow.add(1);
+        List<Integer> cRow = new ArrayList<Integer>();
+        cRow.add(1);
+        cRow.add(0);
+        cRow.add(0);
+        this.adjacencyMatrix.add(aRow);
+        this.adjacencyMatrix.add(bRow);
+        this.adjacencyMatrix.add(cRow);
+
+        this.expectedPaths.add(Arrays.asList(0, 1));
+        this.expectedPaths.add(Arrays.asList(0, 1, 2));
+        this.expectedPaths.add(Arrays.asList(0, 1, 2, 0));
+        this.expectedPaths.add(Arrays.asList(0, 2));
+        this.expectedPaths.add(Arrays.asList(0, 2, 0));
+        this.expectedPaths.add(Arrays.asList(1, 2));
+        this.expectedPaths.add(Arrays.asList(1, 2, 0));
+        this.expectedPaths.add(Arrays.asList(1, 2, 0, 1));
+        this.expectedPaths.add(Arrays.asList(2, 0));
+        this.expectedPaths.add(Arrays.asList(2, 0, 1));
+        this.expectedPaths.add(Arrays.asList(2, 0, 1, 2));
+        this.expectedPaths.add(Arrays.asList(2, 0, 2));
         Set<List<Integer>> paths = this.strategy.fromAllNodes(
             this.adjacencyMatrix);
         assertEquals(expectedPaths, paths);
