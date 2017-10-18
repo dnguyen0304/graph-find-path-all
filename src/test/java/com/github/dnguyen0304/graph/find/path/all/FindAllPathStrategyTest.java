@@ -1,6 +1,7 @@
 package com.github.dnguyen0304.graph.find.path.all;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,71 +13,66 @@ import org.junit.Test;
 public class FindAllPathStrategyTest {
 
     private FindAllPathStrategy strategy;
+    private List<List<Integer>> adjacencyMatrix;
+    private List<List<Integer>> expectedPaths;
 
     @Before
     public void setUp() {
         this.strategy = new FindAllPathStrategy();
+        this.adjacencyMatrix = new ArrayList<>();
+        this.expectedPaths = new ArrayList<>();
     }
 
     @Test
-    public void testFindPathsReturnsOnNullInput() {
-        List<List<Integer>> paths = this.strategy.findPaths(null);
-        assertEquals(new ArrayList<>(), paths);
+    public void testFromOneNodeReturnsNullOnNullAdjacencyMatrix() {
+        List<List<Integer>> paths = this.strategy.fromOneNode(null, null);
+        assertNull(paths);
     }
 
     @Test
-    public void testFindPathsReturnsOnZeroValueInput() {
-        List<List<Integer>> paths = this.strategy.findPaths(new ArrayList<>());
-        assertEquals(new ArrayList<>(), paths);
+    public void testFromOneNodeReturnsNullOnZeroValuedAdjacencyMatrix() {
+        List<List<Integer>> paths = this.strategy.fromOneNode(
+            this.adjacencyMatrix,
+            null);
+        assertNull(paths);
     }
 
     @Test
-    public void testFindPathsAcross2Nodes() {
-        List<List<Integer>> adjacencyMatrix = new ArrayList<>();
-        List<List<Integer>> expectedPaths = new ArrayList<>();
+    public void testFromOneNodeReturnsNullOnNullFromNode() {
+        this.adjacencyMatrix.add(null);
+        List<List<Integer>> paths = this.strategy.fromOneNode(
+            this.adjacencyMatrix,
+            null);
+        assertNull(paths);
+    }
 
+    @Test
+    public void testFromOneNodeReturnsNullOnInvalidFromNode() {
+        this.adjacencyMatrix.add(null);
+        List<List<Integer>> paths = this.strategy.fromOneNode(
+            this.adjacencyMatrix,
+            -1);
+        assertNull(paths);
+    }
+
+    @Test
+    public void testFromOneNode() {
         //   A B
         // A 0 1
         // B 0 0
-
         List<Integer> aRow = new ArrayList<Integer>();
         aRow.add(0);
         aRow.add(1);
         List<Integer> bRow = new ArrayList<Integer>();
         bRow.add(0);
         bRow.add(0);
+        this.adjacencyMatrix.add(aRow);
+        this.adjacencyMatrix.add(bRow);
 
-        adjacencyMatrix.add(aRow);
-        adjacencyMatrix.add(bRow);
+        this.expectedPaths.add(Arrays.asList(0, 1));
 
-        expectedPaths.add(Arrays.asList(0, 1));
-
-        List<List<Integer>> paths = this.strategy.findPaths(adjacencyMatrix);
-        assertEquals(expectedPaths, paths);
-    }
-
-    @Test
-    public void testFindPathsLoop() {
-        List<List<Integer>> adjacencyMatrix = new ArrayList<>();
-        List<List<Integer>> expectedPaths = new ArrayList<>();
-
-        //   A B
-        // A 1 0
-        // B 0 0
-
-        List<Integer> aRow = new ArrayList<Integer>();
-        aRow.add(1);
-        aRow.add(0);
-        List<Integer> bRow = new ArrayList<Integer>();
-        bRow.add(0);
-        bRow.add(0);
-
-        adjacencyMatrix.add(aRow);
-        adjacencyMatrix.add(bRow);
-
-        expectedPaths.add(Arrays.asList(0, 0));
-
-        List<List<Integer>> paths = this.strategy.findPaths(adjacencyMatrix);
+        List<List<Integer>> paths = this.strategy.fromOneNode(adjacencyMatrix,
+                                                              0);
         assertEquals(expectedPaths, paths);
     }
 

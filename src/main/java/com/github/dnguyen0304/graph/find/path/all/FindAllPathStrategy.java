@@ -6,85 +6,91 @@ import java.util.List;
 
 public class FindAllPathStrategy {
 
-    private static final Integer ROOT_NODE_INDEX = 0;
+    public List<List<Integer>> fromOneNode(
+        List<List<Integer>> adjacencyMatrix, Integer fromNode) {
 
-    public List<List<Integer>> findPaths(List<List<Integer>> adjacencyMatrix) {
-        return findPaths(adjacencyMatrix, null, 0);
+        return fromOneNode(adjacencyMatrix, fromNode, fromNode);
     }
 
-    private List<List<Integer>> findPaths(List<List<Integer>> adjacencyMatrix,
-                                          Integer rootNode,
-                                          Integer fromNode) {
-        List<List<Integer>> paths = new ArrayList<>();
+    private List<List<Integer>> fromOneNode(
+        List<List<Integer>> adjacencyMatrix,
+        Integer rootNode,
+        Integer fromNode) {
 
-        // Base Case #1: null and zero-valued inputs
+        // Should these throw IllegalArgumentException instead?
+        // Base Case #1: null or zero-valued adjacency matrices
         if (adjacencyMatrix == null || adjacencyMatrix.isEmpty()) {
-            return paths;
+            return null;
+        }
+        // Base Case #2: null nodes
+        if (rootNode == null || fromNode == null) {
+            return null;
+        }
+        // Base Case #3: invalid nodes
+        if (rootNode < 0 || fromNode < 0) {
+            return null;
         }
 
-        for (int row = fromNode; row < adjacencyMatrix.size(); row++) {
-            List<Integer> children = adjacencyMatrix.get(row);
-            // The runtime complexity of clear() is O(n) because it sets
-            // every element to null. The runtime complexity of removeAll()
-            // is O(n^2) because there is a nested call to contains(), which
-            // has a runtime complexity of O(n). Both of these methods
-            // garbage collect the elements themselves.
-            List<Integer> basePath = new ArrayList<>();
+        List<List<Integer>> paths = new ArrayList<>();
+        List<Integer> children = adjacencyMatrix.get(fromNode);
+        // The runtime complexity of clear() is O(n) because it sets
+        // every element to null. The runtime complexity of removeAll()
+        // is O(n^2) because there is a nested call to contains(), which
+        // has a runtime complexity of O(n). Both of these methods
+        // garbage collect the elements themselves.
+        Boolean hasAdjacent = false;
 
-            if (rootNode != null) {
-                basePath.add(rootNode);
-            }
-
-            basePath.add(fromNode);
-            Boolean hasAdjacent = false;
-
-            for (int toNode = 0; toNode < children.size(); toNode++) {
-                // Base Case #2: looping paths
-                if (children.get(toNode) == 1 &&
-                    rootNode != null &&
-                    rootNode == toNode) {
-                        paths.add(Arrays.asList(toNode));
-                        continue;
-                }
-
-                // Recursive Case #1: adjacent nodes
-                if (children.get(toNode) == 1) {
-                    hasAdjacent = true;
-                    List<List<Integer>> partialPaths = this.findPaths(
-                        adjacencyMatrix,
-                        fromNode,
-                        toNode);
-                    for (List<Integer> partialPath : partialPaths) {
-                        List<Integer> path = new ArrayList<Integer>();
-                        path.addAll(basePath);
-                        path.addAll(partialPath);
-                        paths.add(path);
-                    }
+        for (int toNode = 0; toNode < children.size(); toNode++) {
+            // Base Case #4: looping paths
+            // The current node has an adjacent node.
+            // The adjacent node is the current node.
+            if (children.get(toNode) == 1 && toNode == fromNode) {
+                continue;
+            // Recursive Case #1: adjacent nodes
+            } else if (children.get(toNode) == 1) {
+                hasAdjacent = true;
+                // The current node becomes the new root node and the adjacent
+                // node becomes the new current node.
+                List<List<Integer>> partialPaths = this.fromOneNode(
+                    adjacencyMatrix,
+                    fromNode,
+                    toNode);
+                for (List<Integer> partialPath : partialPaths) {
+                    List<Integer> path = new ArrayList<Integer>();
+                    path.add(fromNode);
+                    path.addAll(partialPath);
+                    paths.add(path);
                 }
             }
+        }
 
-            // Base Case #3: leaf nodes
-            if (this.isLeafNode(basePath, fromNode, hasAdjacent)) {
-                paths.add(Arrays.asList(fromNode));
-            }
+        // Base Case #5: leaf nodes
+        // The current node is a leaf node.
+        // The current node is not the root node.
+        if (!hasAdjacent && rootNode != fromNode) {
+            paths.add(Arrays.asList(fromNode));
         }
 
         return paths;
     }
 
-    private boolean isLeafNode(List<Integer> basePath,
-                               Integer currentNode,
-                               boolean hasAdjacent) {
-        // The base path must have at least one node.
-        // The current node must not have any adjacent nodes.
-        // The current node must not be the root node.
-        if (!basePath.isEmpty() &&
-            !hasAdjacent &&
-            currentNode != basePath.get(ROOT_NODE_INDEX)) {
-                return true;
-        } else {
-            return false;
+    public List<List<Integer>> fromAllNodes(
+        List<List<Integer>> adjacencyMatrix) {
+
+        List<List<Integer>> paths = new ArrayList<>();
+
+        // Base Case #1: null or zero-valued inputs
+        if (adjacencyMatrix == null || adjacencyMatrix.isEmpty()) {
+            // Should this throw IllegalArgumentException instead?
+            return null;
         }
+
+        // Iterative Case #1: simple
+        for (int row = 0; row < adjacencyMatrix.size(); row++) {
+            paths.addAll(fromOneNode(adjacencyMatrix, row, row));
+        }
+
+        return paths;
     }
 
 }
