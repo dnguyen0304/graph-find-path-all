@@ -56,7 +56,7 @@ public class FindAllPathStrategyTest {
     }
 
     @Test
-    public void testFromOneNode() {
+    public void testFromOneNodeAcross2Nodes() {
         //   A B
         // A 0 1
         // B 0 0
@@ -70,6 +70,39 @@ public class FindAllPathStrategyTest {
         this.adjacencyMatrix.add(bRow);
 
         this.expectedPaths.add(Arrays.asList(0, 1));
+
+        List<List<Integer>> paths = this.strategy.fromOneNode(adjacencyMatrix,
+                                                              0);
+        assertEquals(expectedPaths, paths);
+    }
+
+    @Test
+    public void testFromOneNodeAcross3Nodes() {
+        //   A B C D E F
+        // A 0 1 1 0 0 0
+        // B 0 0 1 1 1 0
+        // C 0 0 0 0 0 1
+        // D 0 0 0 0 0 0
+        // E 0 0 0 0 0 0
+        // F 0 0 0 0 0 0
+        List<Integer> aRow = new ArrayList<Integer>();
+        aRow.add(0);
+        aRow.add(1);
+        aRow.add(1);
+        List<Integer> bRow = new ArrayList<Integer>();
+        bRow.add(0);
+        bRow.add(0);
+        bRow.add(1);
+        List<Integer> cRow = new ArrayList<Integer>();
+        cRow.add(0);
+        cRow.add(0);
+        cRow.add(0);
+        this.adjacencyMatrix.add(aRow);
+        this.adjacencyMatrix.add(bRow);
+        this.adjacencyMatrix.add(cRow);
+
+        this.expectedPaths.add(Arrays.asList(0, 1, 2));
+        this.expectedPaths.add(Arrays.asList(0, 2));
 
         List<List<Integer>> paths = this.strategy.fromOneNode(adjacencyMatrix,
                                                               0);
