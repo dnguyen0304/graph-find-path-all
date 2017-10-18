@@ -76,4 +76,25 @@ public class FindAllPathStrategyTest {
         assertEquals(expectedPaths, paths);
     }
 
+    @Test
+    public void testFromOneNodeNoLoopingPaths() {
+        //   A B
+        // A 0 1
+        // B 0 1
+        List<Integer> aRow = new ArrayList<Integer>();
+        aRow.add(0);
+        aRow.add(1);
+        List<Integer> bRow = new ArrayList<Integer>();
+        bRow.add(0);
+        bRow.add(0);
+        this.adjacencyMatrix.add(aRow);
+        this.adjacencyMatrix.add(bRow);
+
+        this.expectedPaths.add(Arrays.asList(0, 1));
+
+        List<List<Integer>> paths = this.strategy.fromOneNode(adjacencyMatrix,
+                                                              0);
+        assertEquals(expectedPaths, paths);
+    }
+
 }

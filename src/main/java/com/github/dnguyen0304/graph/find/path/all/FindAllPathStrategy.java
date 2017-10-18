@@ -74,23 +74,4 @@ public class FindAllPathStrategy {
         return paths;
     }
 
-    public List<List<Integer>> fromAllNodes(
-        List<List<Integer>> adjacencyMatrix) {
-
-        List<List<Integer>> paths = new ArrayList<>();
-
-        // Base Case #1: null or zero-valued inputs
-        if (adjacencyMatrix == null || adjacencyMatrix.isEmpty()) {
-            // Should this throw IllegalArgumentException instead?
-            return null;
-        }
-
-        // Iterative Case #1: simple
-        for (int row = 0; row < adjacencyMatrix.size(); row++) {
-            paths.addAll(fromOneNode(adjacencyMatrix, row, row));
-        }
-
-        return paths;
-    }
-
 }
