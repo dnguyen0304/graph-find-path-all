@@ -2,17 +2,19 @@ package com.github.dnguyen0304.graph.find.path.all;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FindAllPathStrategy {
 
-    public List<List<Integer>> fromOneNode(
+    public Set<List<Integer>> fromOneNode(
         List<List<Integer>> adjacencyMatrix, Integer fromNode) {
 
         return fromOneNode(adjacencyMatrix, fromNode, fromNode);
     }
 
-    private List<List<Integer>> fromOneNode(
+    private Set<List<Integer>> fromOneNode(
         List<List<Integer>> adjacencyMatrix,
         Integer rootNode,
         Integer fromNode) {
@@ -31,7 +33,7 @@ public class FindAllPathStrategy {
             return null;
         }
 
-        List<List<Integer>> paths = new ArrayList<>();
+        Set<List<Integer>> paths = new HashSet<>();
         List<Integer> children = adjacencyMatrix.get(fromNode);
         // The runtime complexity of clear() is O(n) because it sets
         // every element to null. The runtime complexity of removeAll()
@@ -49,9 +51,12 @@ public class FindAllPathStrategy {
             // Recursive Case #1: adjacent nodes
             } else if (children.get(toNode) == 1) {
                 hasAdjacent = true;
+                if (rootNode != fromNode) {
+                    paths.add(Arrays.asList(fromNode));
+                }
                 // The current node becomes the new root node and the adjacent
                 // node becomes the new current node.
-                List<List<Integer>> partialPaths = this.fromOneNode(
+                Set<List<Integer>> partialPaths = this.fromOneNode(
                     adjacencyMatrix,
                     fromNode,
                     toNode);
@@ -74,10 +79,10 @@ public class FindAllPathStrategy {
         return paths;
     }
 
-    public List<List<Integer>> fromAllNodes(
+    public Set<List<Integer>> fromAllNodes(
         List<List<Integer>> adjacencyMatrix) {
 
-        List<List<Integer>> paths = new ArrayList<>();
+        Set<List<Integer>> paths = new HashSet<>();
 
         // Base Case #1: null or zero-valued adjacency matrices
         if (adjacencyMatrix == null || adjacencyMatrix.isEmpty()) {
@@ -87,7 +92,9 @@ public class FindAllPathStrategy {
 
         // Iterative Case #1
         for (int row = 0; row < adjacencyMatrix.size(); row++) {
-            paths.addAll(fromOneNode(adjacencyMatrix, row, row));
+            for (List<Integer> path : fromOneNode(adjacencyMatrix, row, row)) {
+                paths.add(path);
+            }
         }
 
         return paths;
