@@ -31,7 +31,7 @@ public class FindAllPathStrategyTest {
     }
 
     @Test
-    public void testFindPaths() {
+    public void testFindPathsAcross2Nodes() {
         List<List<Integer>> adjacencyMatrix = new ArrayList<>();
         List<List<Integer>> expectedPaths = new ArrayList<>();
 
