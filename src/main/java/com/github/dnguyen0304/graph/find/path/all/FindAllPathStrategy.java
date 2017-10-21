@@ -60,8 +60,6 @@ public class FindAllPathStrategy {
                 continue;
             }
             // Base Case: cyclic path
-            // Lower in the stack, the tail of cyclic paths is naively
-            // returned.
             if (visited.contains(next)) {
                 paths.add(Arrays.asList(current, next));
                 continue;
@@ -79,7 +77,7 @@ public class FindAllPathStrategy {
                 next,
                 new HashSet<>(visited));
             for (List<Integer> partialPath : partialPaths) {
-                // Higher in the stack, discard cyclic paths.
+                // Base Case: cyclic paths
                 Integer tail = partialPath.get(partialPath.size() - 1);
                 if (!isStart && current == tail) {
                     continue;
